@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrapex.API", "Scrapex.API\Scrapex.API.csproj", "{3C57FF7C-FCA6-4297-9BFD-5ACCAA87E0A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrapex.Application", "Scrapex.Application\Scrapex.Application.csproj", "{6CE94723-8DF2-4B7A-9011-9A0E4424697D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrapex.Domain", "Scrapex.Domain\Scrapex.Domain.csproj", "{576D4186-DC7F-4626-B936-0EBB0E0DEE27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrapex.Infrastructure", "Scrapex.Infrastructure\Scrapex.Infrastructure.csproj", "{3A824C5B-510F-484D-AA00-CCCC2AD62F8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrapex.News.Application", "Scrapex.News.Application\Scrapex.News.Application.csproj", "{A9594F9F-03D5-4FF7-8EBB-2274052AAAC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scrapex.POM", "Scrapex.POM\Scrapex.POM.csproj", "{29B20F3C-F62D-4184-918B-7DD13EBC9CD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C57FF7C-FCA6-4297-9BFD-5ACCAA87E0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C57FF7C-FCA6-4297-9BFD-5ACCAA87E0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C57FF7C-FCA6-4297-9BFD-5ACCAA87E0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C57FF7C-FCA6-4297-9BFD-5ACCAA87E0A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE94723-8DF2-4B7A-9011-9A0E4424697D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE94723-8DF2-4B7A-9011-9A0E4424697D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE94723-8DF2-4B7A-9011-9A0E4424697D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE94723-8DF2-4B7A-9011-9A0E4424697D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{576D4186-DC7F-4626-B936-0EBB0E0DEE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{576D4186-DC7F-4626-B936-0EBB0E0DEE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{576D4186-DC7F-4626-B936-0EBB0E0DEE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{576D4186-DC7F-4626-B936-0EBB0E0DEE27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A824C5B-510F-484D-AA00-CCCC2AD62F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A824C5B-510F-484D-AA00-CCCC2AD62F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A824C5B-510F-484D-AA00-CCCC2AD62F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A824C5B-510F-484D-AA00-CCCC2AD62F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9594F9F-03D5-4FF7-8EBB-2274052AAAC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9594F9F-03D5-4FF7-8EBB-2274052AAAC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9594F9F-03D5-4FF7-8EBB-2274052AAAC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9594F9F-03D5-4FF7-8EBB-2274052AAAC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B20F3C-F62D-4184-918B-7DD13EBC9CD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B20F3C-F62D-4184-918B-7DD13EBC9CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B20F3C-F62D-4184-918B-7DD13EBC9CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B20F3C-F62D-4184-918B-7DD13EBC9CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D609AF33-4DBC-48A9-99C2-65553912BB98}
+	EndGlobalSection
+EndGlobal

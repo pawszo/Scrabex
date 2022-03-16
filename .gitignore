@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Scrapex
+/Scrapex.Application/obj
+/Scrapex.Domain/bin/Debug/net6.0
+/Scrapex.Domain/obj
+/Scrapex.Infrastructure/bin/Debug/net6.0
+/Scrapex.Infrastructure/obj
+/Scrapex.News.Application/bin/Debug/net6.0
+/Scrapex.News.Application/obj
+/Scrapex.POM/bin/Debug/net6.0
+/Scrapex.POM/obj
+/Scrapex.News.Application/Scrapex.News/obj
+/Scrapex.POM/Scrapex.POM/obj
+/Scrapex.Application/bin/Debug/net6.0
+/Scrapex.API/obj
+/Scrapex.API/bin/Debug/net6.0
+/obj/Debug
