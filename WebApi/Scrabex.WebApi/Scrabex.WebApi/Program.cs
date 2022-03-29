@@ -30,9 +30,17 @@ builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(conne
 builder.Services.AddDbContext<ScenarioContext>(options => options.UseSqlServer(connectionString));
 
 // services
-builder.Services.AddScoped<IControllerFacade, ControllerFacade>();
+builder.Services.AddScoped<IObjectService<User, CreateUserDto, UserDto>, UserService>();
+builder.Services.AddScoped<IObjectService<Scenario, CreateScenarioDto, ScenarioDto>, ScenarioService>();
+
+// mappers
 builder.Services.AddScoped<IMapper<User, CreateUserDto, UserDto>, UserMapper>();
+builder.Services.AddScoped<IMapper<UserDetail, CreateUserDetailDto, UserDetailDto>, UserDetailMapper>();
 builder.Services.AddScoped<IMapper<Scenario, CreateScenarioDto, ScenarioDto>, ScenarioMapper>();
+builder.Services.AddScoped<IMapper<ScenarioComponent, CreateScenarioComponentDto, ScenarioComponentDto>, ScenarioComponentMapper>();
+builder.Services.AddScoped<IMapper<ScenarioStep, CreateScenarioStepDto, ScenarioStepDto>, ScenarioStepMapper>();
+
+// facades
 builder.Services.AddScoped<IObjectServiceFacade, ObjectServiceFacade>();
 
 #endregion

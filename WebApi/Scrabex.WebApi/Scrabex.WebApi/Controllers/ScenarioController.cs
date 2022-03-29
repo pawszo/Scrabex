@@ -12,6 +12,7 @@ using Scrabex.WebApi.Contexts;
 using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Mappers;
 using Scrabex.WebApi.Models;
+using Scrabex.WebApi.Services;
 
 namespace Scrabex.WebApi.Controllers
 {
@@ -19,15 +20,12 @@ namespace Scrabex.WebApi.Controllers
     [ApiController]
     public class ScenarioController : ControllerBase
     {
-        private readonly ScenarioContext _dbContext;
-        private readonly IMapper<Scenario, CreateScenarioDto, ScenarioDto> _mapper;
+        private readonly IObjectService<Scenario, CreateScenarioDto, ScenarioDto> _service;
 
         public ScenarioController(
-            ScenarioContext context, 
-            IMapper<Scenario, CreateScenarioDto, ScenarioDto> mapper)
+            IObjectService<Scenario, CreateScenarioDto, ScenarioDto> service)
         {
-            _dbContext = context;
-            _mapper = mapper;
+            _service = service;
         }
 
         // GET: api/Scenario
