@@ -17,15 +17,12 @@ namespace Scrabex.WebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly IControllerFacade _facade;
         private readonly IObjectService<User, CreateUserDto, UserDto> _service;
         public UserController(
             IConfiguration configuration, 
-            IControllerFacade facade,
             IObjectService<User,CreateUserDto,UserDto> userService)
         {
             _config = configuration;
-            _facade = facade;
             _service = userService;
         }
 

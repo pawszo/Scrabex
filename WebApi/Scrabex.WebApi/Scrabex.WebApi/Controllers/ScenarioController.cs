@@ -32,30 +32,20 @@ namespace Scrabex.WebApi.Controllers
         [HttpGet]
         public JsonResult GetScenarios()
         {
-            //return await _dbContext.Scenarios.ToListAsync();
-
-            var scenarios = new List<ScenarioDto>();
-            var enumerator = _dbContext.Scenarios.GetAsyncEnumerator();
-            while (enumerator.MoveNextAsync().Result)
-            {
-                var scenarioDto = _mapper.MapToDto(enumerator.Current);
-                scenarios.Add(scenarioDto);
-            }
-            return new JsonResult(JArray.FromObject(scenarios.ToArray()));
+            var scenarios = _service.GetAll();
+            return new JsonResult(scenarios.Result.Select(dto => JsonConvert.SerializeObject(dto)));
         }
 
         // GET: api/Scenario/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Scenario>> GetScenario(int id)
+        public ActionResult<ScenarioDto> GetScenario(int id)
         {
-            var scenario = await _dbContext.Scenarios.FindAsync(id);
-
-            if (scenario == null)
+            if(_service.TryGet(id, out var foundObject))
             {
-                return NotFound();
+                return new JsonResult(JsonConvert.SerializeObject(foundObject));
             }
 
-            return scenario;
+            return new NotFoundObjectResult(id);
         }
 
         // PUT: api/Scenario/5
