@@ -8,6 +8,8 @@ using Scrabex.WebApi.Models;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Scrabex.WebApi.Services;
+using Scrabex.WebApi.Dtos.User;
+using Scrabex.WebApi.Dtos.Scenario;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,15 +32,15 @@ builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(conne
 builder.Services.AddDbContext<ScenarioContext>(options => options.UseSqlServer(connectionString));
 
 // services
-builder.Services.AddScoped<IObjectService<User, CreateUserDto, UserDto>, UserService>();
-builder.Services.AddScoped<IObjectService<Scenario, CreateScenarioDto, ScenarioDto>, ScenarioService>();
+builder.Services.AddScoped<IObjectService<User, CreateUserDto, UserDto, UpdateUserDto>, UserService>();
+builder.Services.AddScoped<IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto>, ScenarioService>();
 
 // mappers
-builder.Services.AddScoped<IMapper<User, CreateUserDto, UserDto>, UserMapper>();
-builder.Services.AddScoped<IMapper<UserDetail, CreateUserDetailDto, UserDetailDto>, UserDetailMapper>();
-builder.Services.AddScoped<IMapper<Scenario, CreateScenarioDto, ScenarioDto>, ScenarioMapper>();
-builder.Services.AddScoped<IMapper<ScenarioComponent, CreateScenarioComponentDto, ScenarioComponentDto>, ScenarioComponentMapper>();
-builder.Services.AddScoped<IMapper<ScenarioStep, CreateScenarioStepDto, ScenarioStepDto>, ScenarioStepMapper>();
+builder.Services.AddScoped<IMapper<User, CreateUserDto, UserDto, UpdateUserDto>, UserMapper>();
+builder.Services.AddScoped<IMapper<UserDetail, CreateUserDetailDto, UserDetailDto, UpdateUserDetailDto>, UserDetailMapper>();
+builder.Services.AddScoped<IMapper<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto>, ScenarioMapper>();
+builder.Services.AddScoped<IMapper<ScenarioComponent, CreateScenarioComponentDto, ScenarioComponentDto, UpdateScenarioComponentDto>, ScenarioComponentMapper>();
+builder.Services.AddScoped<IMapper<ScenarioStep, CreateScenarioStepDto, ScenarioStepDto, UpdateScenarioStepDto>, ScenarioStepMapper>();
 
 // facades
 builder.Services.AddScoped<IObjectServiceFacade, ObjectServiceFacade>();

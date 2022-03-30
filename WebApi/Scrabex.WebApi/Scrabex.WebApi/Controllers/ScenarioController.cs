@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Scrabex.WebApi.Contexts;
 using Scrabex.WebApi.Dtos;
+using Scrabex.WebApi.Dtos.Scenario;
 using Scrabex.WebApi.Mappers;
 using Scrabex.WebApi.Models;
 using Scrabex.WebApi.Services;
@@ -18,97 +19,68 @@ namespace Scrabex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class ScenarioController : ControllerBase
     {
-        private readonly IObjectService<Scenario, CreateScenarioDto, ScenarioDto> _service;
+        private readonly IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto> _service;
 
         public ScenarioController(
-            IObjectService<Scenario, CreateScenarioDto, ScenarioDto> service)
+            IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto> service)
         {
             _service = service;
         }
 
         // GET: api/Scenario
         [HttpGet]
-        public JsonResult GetScenarios()
+        public IActionResult GetScenarios()
         {
             var scenarios = _service.GetAll();
-            return new JsonResult(scenarios.Result.Select(dto => JsonConvert.SerializeObject(dto)));
+            return new JsonResult(JsonConvert.SerializeObject(scenarios.ToArray()));
         }
 
         // GET: api/Scenario/5
         [HttpGet("{id}")]
-        public ActionResult<ScenarioDto> GetScenario(int id)
+        public IActionResult GetScenario(int id)
         {
-            if(_service.TryGet(id, out var foundObject))
+            if(!_service.TryGet(id, out var foundObject))
             {
-                return new JsonResult(JsonConvert.SerializeObject(foundObject));
+                return new NotFoundResult();
             }
 
-            return new NotFoundObjectResult(id);
+            return new JsonResult(JsonConvert.SerializeObject(foundObject));
         }
 
         // PUT: api/Scenario/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutScenario(int id, Scenario scenario)
+        public IActionResult PutScenario(int id, [FromBody] UpdateScenarioDto dto)
         {
-            if (id != scenario.ScenarioId)
-            {
-                return BadRequest();
-            }
+            if (!_service.TryUpdate(id, dto, out var updatedScenario))
+                return new UnprocessableEntityResult();
 
-            _dbContext.Entry(scenario).State = EntityState.Modified;
-
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ScenarioExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return new JsonResult(JsonConvert.SerializeObject(updatedScenario));
         }
 
         // POST: api/Scenario
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Scenario>> PostScenario(Scenario scenario)
+        public IActionResult PostScenario([FromBody] CreateScenarioDto scenarioDto)
         {
-            _dbContext.Scenarios.Add(scenario);
-            await _dbContext.SaveChangesAsync();
+            if (!_service.TryAdd(scenarioDto, out var newScenario))
+                return new UnprocessableEntityResult();
 
-            return CreatedAtAction("GetScenario", new { id = scenario.ScenarioId }, scenario);
+            return new JsonResult(JsonConvert.SerializeObject(newScenario));
         }
 
         // DELETE: api/Scenario/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteScenario(int id)
+        public IActionResult DeleteScenario(int id)
         {
-            var scenario = await _dbContext.Scenarios.FindAsync(id);
-            if (scenario == null)
-            {
-                return NotFound();
-            }
+            if(!_service.TryDelete(id, out var removedObject))
+                return new NotFoundResult();
 
-            _dbContext.Scenarios.Remove(scenario);
-            await _dbContext.SaveChangesAsync();
-
-            return NoContent();
+            return new JsonResult(JsonConvert.SerializeObject(removedObject));
         }
 
-        private bool ScenarioExists(int id)
-        {
-            return _dbContext.Scenarios.Any(e => e.ScenarioId == id);
-        }
     }
 }

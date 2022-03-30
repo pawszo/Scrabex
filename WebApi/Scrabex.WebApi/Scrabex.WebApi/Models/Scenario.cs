@@ -5,13 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scrabex.WebApi.Models
 {
-    [JsonObject]
     [Table("Scenarios")]
-    public class Scenario
+    public class Scenario : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ScenarioId { get; set; }
+        public override int Id { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public Guid ScenarioGuid { get; set; }

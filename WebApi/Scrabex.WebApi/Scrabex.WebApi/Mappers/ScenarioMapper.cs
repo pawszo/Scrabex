@@ -1,16 +1,14 @@
 ﻿using Scrabex.WebApi.Dtos;
+using Scrabex.WebApi.Dtos.Scenario;
 using Scrabex.WebApi.Models;
 
 namespace Scrabex.WebApi.Mappers
 {
-    public class ScenarioMapper : 
-        IMapper<Scenario, CreateScenarioDto, ScenarioDto>, 
-        IMapper<ScenarioComponent, CreateScenarioComponentDto, ScenarioComponentDto>,
-        IMapper<ScenarioStep, CreateScenarioStepDto, ScenarioStepDto>
+    public class ScenarioMapper : IMapper<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto>
     {
         public ScenarioDto MapToDto(Scenario model) => new ScenarioDto
         {
-            ScenarioId = model.ScenarioId,
+            Id = model.Id,
             ScenarioGuid = model.ScenarioGuid,
             AuthorId = model.AuthorId,
             CreatedAt = model.CreatedAt
@@ -18,7 +16,7 @@ namespace Scrabex.WebApi.Mappers
 
         public ScenarioComponentDto MapToDto(ScenarioComponent model) => new ScenarioComponentDto
         {
-            ComponentId = model.ComponentId,
+            Id = model.Id,
             ScenarioId = model.ScenarioId,
             Query = model.Query,
             Name = model.Name
@@ -29,12 +27,13 @@ namespace Scrabex.WebApi.Mappers
             Action = model.Action,
             AuthorId = model.AuthorId,
             Order = model.Order,
-            StepId = model.StepId
+            Id = model.Id,
+            ScenarioId =model.ScenarioId
         };
 
-        public Scenario MapToModel(CreateScenarioDto dto) => new Scenario
+        public Scenario CreateModel(CreateScenarioDto dto) => new Scenario
         {
-            //AuthorId = context.User.
+            //nothing needed
         };
 
         public ScenarioComponent MapToModel(CreateScenarioComponentDto dto) => new ScenarioComponent
@@ -46,9 +45,13 @@ namespace Scrabex.WebApi.Mappers
 
         public ScenarioStep MapToModel(CreateScenarioStepDto dto) => new ScenarioStep
         {
-            AuthorId = dto.AuthorId,
             Action = dto.Action,
             Order = dto.Order
         };
+
+        public void UpdateModel(Scenario model, UpdateScenarioDto updateDto)
+        {
+            model.AuthorId = updateDto.AuthorId;
+        }
     }
 }

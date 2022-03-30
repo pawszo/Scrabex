@@ -4,13 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scrabex.WebApi.Models
 {
-    [JsonObject]
     [Table("ScenarioComponents")]
-    public class ScenarioComponent
+    public class ScenarioComponent : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ComponentId { get; set; }
+        public override int Id { get; set; }
         public string Name { get; set; }
         public string Query { get; set; }
         public int ScenarioId  { get; set; }

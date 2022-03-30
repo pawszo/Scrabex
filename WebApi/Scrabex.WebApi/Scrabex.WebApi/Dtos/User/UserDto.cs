@@ -5,14 +5,14 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Scrabex.WebApi.Dtos
 {
     [JsonObject]
-    public class UserDto
+    public class UserDto : EntityBase
     {
         [SwaggerSchema(ReadOnly = true)]
-        public int UserId { get; set; }
+        public override int Id { get; set; }
         public string UserTitle { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
         public string CountryCode { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]

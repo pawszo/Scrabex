@@ -3,9 +3,9 @@ using Scrabex.WebApi.Models;
 
 namespace Scrabex.WebApi.Mappers
 {
-    public class UserDetailMapper : IMapper<UserDetail, CreateUserDetailDto, UserDetailDto>
+    public class UserDetailMapper : IMapper<UserDetail, CreateUserDetailDto, UserDetailDto, UpdateUserDetailDto>
     {
-        public UserDetail MapToModel(CreateUserDetailDto dto) => new UserDetail
+        public UserDetail CreateModel(CreateUserDetailDto dto) => new UserDetail
         {
             LastUpdate = DateTime.Now,
             Login = dto.Login,
@@ -13,13 +13,26 @@ namespace Scrabex.WebApi.Mappers
             UserId = dto.UserId
         };
 
-        public UserDetailDto MapToDto(UserDetail model) => new UserDetailDto
+        public UserDetailDto MapToDto(UserDetail model)
         {
-            UserId = model.UserId,
-            ForgotPassword = model.ForgotPassword,
-            LastUpdate = model.LastUpdate,
-            Login = model.Login,
-            Password = model.Password
-        };
+            if (model is null)
+                return new UserDetailDto();
+
+            return new UserDetailDto
+            {
+                Id = model.Id,
+                ForgotPassword = model.ForgotPassword,
+                LastUpdate = model.LastUpdate,
+                Login = model.Login,
+                Password = model.Password,
+                UserId = model.UserId
+            };
+        }
+
+        public void UpdateModel(UserDetail model, UpdateUserDetailDto updateDto)
+        {
+            model.LastUpdate = DateTime.Now;
+            model.Password = updateDto.Password;
+        }
     }
 }

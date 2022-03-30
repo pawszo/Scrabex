@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Scrabex.WebApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Scrabex.WebApi.Dtos
 {

@@ -3,21 +3,27 @@ using Scrabex.WebApi.Models;
 
 namespace Scrabex.WebApi.Mappers
 {
-    public class ScenarioComponentMapper : IMapper<ScenarioComponent, CreateScenarioComponentDto, ScenarioComponentDto>
+    public class ScenarioComponentMapper : IMapper<ScenarioComponent, CreateScenarioComponentDto, ScenarioComponentDto, UpdateScenarioComponentDto>
     {
         public ScenarioComponentDto MapToDto(ScenarioComponent model) => new ScenarioComponentDto
         {
-            ComponentId = model.ComponentId,
+            Id = model.Id,
             Name = model.Name,
             Query = model.Query,
             ScenarioId = model.ScenarioId
         };
 
-        public ScenarioComponent MapToModel(CreateScenarioComponentDto dto) => new ScenarioComponent
+        public ScenarioComponent CreateModel(CreateScenarioComponentDto dto) => new ScenarioComponent
         {
             Name = dto.Name,
             Query = dto.Query,
             ScenarioId = dto.ScenarioId
         };
+
+        public void UpdateModel(ScenarioComponent model, UpdateScenarioComponentDto updateDto)
+        {
+            model.Query = updateDto.Query;
+            model.Name = updateDto.Name;
+        }
     }
 }

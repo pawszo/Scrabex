@@ -1,13 +1,14 @@
 begin tran
-
-drop table ScenarioSteps;
+/*
 drop table ScenarioComponents;
 drop table UserDetails;
-drop table Scenarios;
 drop table Users;
+drop table ScenarioSteps;
+drop table Scenarios;
+*/
 
 create table Users (
-	UserId int identity(1,1) primary key,
+	Id int identity(1,1) primary key,
 	UserTitle VARCHAR(128) not null,
 	CreatedAt DateTime not null,
 	CountryCode VARCHAR(3) not null,
@@ -15,24 +16,25 @@ create table Users (
 );
 
 create table Scenarios (
-	ScenarioId int identity(1,1) primary key,
+	Id int identity(1,1) primary key,
 	ScenarioGuid UNIQUEIDENTIFIER default NEWID(),
 	CreatedAt DateTime not null,
 	AuthorId int not null
-	FOREIGN KEY (AuthorId) references [dbo].Users(UserId)
+	FOREIGN KEY (AuthorId) references [dbo].Users(Id)
 );
 
 create table ScenarioSteps (
-	StepId int identity(1,1) primary key,
+	Id int identity(1,1) primary key,
 	[Order] int not null,
 	Action VARCHAR(MAX) not null,
 	ScenarioId int not null
-	FOREIGN KEY (ScenarioId) references [dbo].Scenarios(ScenarioId)
+	FOREIGN KEY (Id) references [dbo].Scenarios(Id)
 );
 
 create table UserDetails (
-	UserId int identity(1,1) primary key,
-	foreign key (UserId) references Users(UserId),
+	Id int identity(1,1) primary key,
+	UserId int not null
+	foreign key (UserId) references Users(Id),
 	Login VARCHAR(128) not null,
 	Password VARCHAR(128) not null,
 	ForgotPassword bit not null,
@@ -44,7 +46,7 @@ create table ScenarioComponents (
 	Name VARCHAR(128) not null,
 	Query VARCHAR(2048) not null,
 	ScenarioId int not null
-	FOREIGN KEY (ScenarioId) references [dbo].Scenarios(ScenarioId)	
+	FOREIGN KEY (ScenarioId) references [dbo].Scenarios(Id)	
 );
 
 commit tran

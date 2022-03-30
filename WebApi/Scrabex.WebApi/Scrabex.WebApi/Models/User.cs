@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scrabex.WebApi.Models
 {
-    [JsonObject]
     [Table("Users")]
-    public class User
+    public class User : EntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
-        public string UserTitle { get; set; }
+        public override int Id { get; set; }
+        public string UserTitle { get; set; }        
         public DateTime CreatedAt { get; set; }
         public string CountryCode { get; set; }
         public bool Confirmed { get; set; }
