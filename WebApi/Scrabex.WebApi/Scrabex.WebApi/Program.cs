@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Scrabex.WebApi.Services;
 using Scrabex.WebApi.Dtos.User;
 using Scrabex.WebApi.Dtos.Scenario;
+using Microsoft.AspNetCore.Authentication;
+using Scrabex.WebApi.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,7 @@ builder.Services.AddDbContext<ScenarioContext>(options => options.UseSqlServer(c
 // services
 builder.Services.AddScoped<IObjectService<User, CreateUserDto, UserDto, UpdateUserDto>, UserService>();
 builder.Services.AddScoped<IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto>, ScenarioService>();
+builder.Services.AddScoped<IAuthService, UserService>();
 
 // mappers
 builder.Services.AddScoped<IMapper<User, CreateUserDto, UserDto, UpdateUserDto>, UserMapper>();
@@ -62,6 +65,13 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder
+    .Services
+    .AddAuthentication("BasicAuthentication")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+builder.Services.AddAuthorization();
 #endregion
 
 #region Serialization
@@ -96,10 +106,11 @@ if (app.Environment.IsDevelopment())
 }
 #endregion
 
-app.UseHttpsRedirection();
 
+app.UseHttpsRedirection();
 app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

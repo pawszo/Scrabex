@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace Scrabex.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class ScenarioController : ControllerBase
     {
         private readonly IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto> _service;
