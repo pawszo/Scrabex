@@ -13,7 +13,7 @@ namespace Scrabex.WebApi.Dtos
         public int UserId { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
         public bool ForgotPassword { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]

@@ -18,7 +18,7 @@ create table UserDetails (
 	UserId int not null
 	foreign key (UserId) references Users(Id),
 	Login VARCHAR(128) not null,
-	Password VARCHAR(32) not null,
+	Password VARBINARY(32) not null,
 	Email VARCHAR(64) not null,
 	ForgotPassword bit not null,
 	LastUpdate DateTime not null

@@ -2,6 +2,6 @@
 {
     public interface IHashService
     {
-        string GetHash(string key);
+        byte[] GetHash(string key);
     }
 }

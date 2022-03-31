@@ -15,7 +15,7 @@ namespace Scrabex.WebApi.Models
         /// <summary>
         /// MD5 hashed password
         /// </summary>
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
         public string Email { get; set; }
         public bool ForgotPassword { get; set; }
         public DateTime LastUpdate { get; set; }

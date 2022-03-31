@@ -50,7 +50,7 @@ namespace Scrabex.WebApi.Services
                 return false;
 
             var hashedPassword = _hashService.GetHash(dto.Password);
-            if (!hashedPassword.Equals(foundUserDetail.Password))
+            if (!hashedPassword.SequenceEqual(foundUserDetail.Password))
                 return false;
 
             var token = GenerateJwtToken(foundUser);
