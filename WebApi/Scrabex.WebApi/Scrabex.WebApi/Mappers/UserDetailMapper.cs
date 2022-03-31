@@ -18,7 +18,8 @@ namespace Scrabex.WebApi.Mappers
             LastUpdate = DateTime.Now,
             Login = dto.Login,
             Password = _hashService.GetHash(dto.Password),
-            UserId = dto.UserId
+            UserId = dto.UserId,
+            Email = dto.Email
         };
 
         public UserDetailDto MapToDto(UserDetail model)
@@ -33,7 +34,8 @@ namespace Scrabex.WebApi.Mappers
                 LastUpdate = model.LastUpdate,
                 Login = model.Login,
                 Password = model.Password,
-                UserId = model.UserId
+                UserId = model.UserId,
+                Email= model.Email
             };
         }
 
@@ -41,6 +43,7 @@ namespace Scrabex.WebApi.Mappers
         {
             model.LastUpdate = DateTime.Now;
             model.Password = _hashService.GetHash(updateDto.Password);
+            model.Email = updateDto.Email;
         }
     }
 }

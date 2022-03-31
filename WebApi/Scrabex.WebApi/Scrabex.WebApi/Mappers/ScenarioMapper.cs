@@ -27,12 +27,12 @@ namespace Scrabex.WebApi.Mappers
             Action = model.Action,
             Order = model.Order,
             Id = model.Id,
-            ScenarioId =model.ScenarioId
+            ScenarioId = model.ScenarioId
         };
 
         public Scenario CreateModel(CreateScenarioDto dto) => new Scenario
         {
-            //nothing needed
+            AuthorId = dto.AuthorId
         };
 
         public ScenarioComponent MapToModel(CreateScenarioComponentDto dto) => new ScenarioComponent
@@ -45,7 +45,8 @@ namespace Scrabex.WebApi.Mappers
         public ScenarioStep MapToModel(CreateScenarioStepDto dto) => new ScenarioStep
         {
             Action = dto.Action,
-            Order = dto.Order
+            Order = dto.Order,
+            ScenarioId = dto.ScenarioId
         };
 
         public void UpdateModel(Scenario model, UpdateScenarioDto updateDto)

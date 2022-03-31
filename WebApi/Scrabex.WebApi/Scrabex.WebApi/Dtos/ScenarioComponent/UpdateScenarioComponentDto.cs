@@ -7,5 +7,6 @@ namespace Scrabex.WebApi.Dtos
     public class UpdateScenarioComponentDto : CreateScenarioComponentDto, IEntity
     {
         public int Id { get; set; }
+        public string Symbol { get; set; }
     }
 }

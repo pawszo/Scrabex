@@ -1,6 +1,6 @@
 ﻿namespace Scrabex.WebApi.Enums
 {
-    [Flags] public enum AccessLevels : int
+    [Flags] public enum AccessLevel : int
     {
         Anon = 0,
         AnonConsent = 1,

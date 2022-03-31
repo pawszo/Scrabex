@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Scrabex.WebApi.Enums;
+using System.Text;
 
 namespace Scrabex.WebApi.Adapters
 {
@@ -17,5 +18,6 @@ namespace Scrabex.WebApi.Adapters
         /// Measured in seconds
         /// </summary>
         int TokenExpiration { get; }
+        AccessLevel DefaultAccessLevelOnRegister { get; }
     }
 }

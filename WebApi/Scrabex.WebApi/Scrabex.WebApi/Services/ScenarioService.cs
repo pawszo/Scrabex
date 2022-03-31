@@ -48,11 +48,13 @@ namespace Scrabex.WebApi.Services
         public bool TryAdd(CreateScenarioDto dto, out ScenarioDto creationResult)
         {
             creationResult = null;
-            if (!_facade.TryAdd(dto, _scenarioMapper, _context, out var addedScenario))
+            if (!_facade.TryAdd(dto, _scenarioMapper, _context, out creationResult))
                 return false;
 
-            dto.Steps.ToList().ForEach(p => p.ScenarioId = addedScenario.Id);
-            dto.Components.ToList().ForEach(p => p.ScenarioId = addedScenario.Id);
+            var scenarioId = creationResult.Id;
+
+            dto.Steps.ToList().ForEach(p => p.ScenarioId = scenarioId);
+            dto.Components.ToList().ForEach(p => p.ScenarioId = scenarioId);
 
             if (!_facade.TryAddAll(dto.Steps, _scenarioStepMapper, _context, out var addedSteps))
                 return false;
@@ -60,10 +62,10 @@ namespace Scrabex.WebApi.Services
             if (!_facade.TryAddAll(dto.Components, _scenarioComponentMapper, _context, out var addedComponents))
                 return false;
 
-            addedScenario.Steps = addedSteps.ToArray();
-            addedScenario.Components = addedComponents.ToArray();
+            creationResult.Steps = addedSteps.ToArray();
+            creationResult.Components = addedComponents.ToArray();
 
-            return addedScenario.Steps.All(p => p != null) && addedSteps.All(p => p != null);
+            return true;
         }
 
         public bool TryDelete(int id, out ScenarioDto removedObject)
@@ -99,6 +101,9 @@ namespace Scrabex.WebApi.Services
 
             IList<ScenarioComponentDto> updatedComponents = new List<ScenarioComponentDto>();
             IList<ScenarioStepDto> updatedSteps = new List<ScenarioStepDto>();
+
+            dto.Components.ToList().ForEach(p => p.ScenarioId = id);
+            dto.Steps.ToList().ForEach(p => p.ScenarioId = id);
 
             if (dto.Components.Any() && !_facade.TryUpdateAll(
                 dto.Components.ToDictionary(p => p.Id, p => p),

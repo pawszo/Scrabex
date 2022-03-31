@@ -9,7 +9,6 @@ using Scrabex.WebApi.Services;
 
 namespace Scrabex.WebApi.Controllers
 {
-    [Route("api")]
     [ApiController]
     [Produces("application/json")]
     public class AuthController : ControllerBase
@@ -21,39 +20,40 @@ namespace Scrabex.WebApi.Controllers
             _authService = authService;
         }
 
-        [HttpPost("/register")]
-        [Authorize(AccessLevels.AnonConsent)]
+        [HttpPost("/api/register")]
+        [Authorize(AccessLevel.Anon)]
+        //[Authorize(AccessLevels.AnonConsent)]
         public IActionResult Register([FromBody] CreateUserDto userDto)
         {
             if (!_authService.TryRegister(userDto, out var newUser))
                 return new JsonResult(UserMessages.RegisterFailed) { StatusCode = StatusCodes.Status406NotAcceptable };
 
-            return new JsonResult(JsonConvert.SerializeObject(newUser)) { StatusCode = StatusCodes.Status201Created };
+            return new JsonResult(newUser) { StatusCode = StatusCodes.Status201Created };
         }
 
-        [HttpPost("/login")]
-        [Authorize(AccessLevels.Anon)]
+        [HttpPost("/api/login")]
+        [Authorize(AccessLevel.Anon)]
         public IActionResult Login([FromBody] LoginDto dto)
         {
             if (dto.ForgotPassword)
             {
                 if(!_authService.ForgotPassword(dto))
-                    return new JsonResult(new JObject(UserMessages.ChangePasswordEmailError)) { StatusCode = StatusCodes.Status400BadRequest };
+                    return new JsonResult(UserMessages.ChangePasswordEmailError) { StatusCode = StatusCodes.Status400BadRequest };
 
-                return new JsonResult(new JObject(UserMessages.ChangePasswordEmailSent)) { StatusCode = StatusCodes.Status202Accepted };
+                return new JsonResult(UserMessages.ChangePasswordEmailSent) { StatusCode = StatusCodes.Status202Accepted };
             }
 
             if (!_authService.TryLogin(dto, out var loggedUser))
                 return new JsonResult(UserMessages.LoginFailed) { StatusCode = StatusCodes.Status406NotAcceptable };
 
-            return new JsonResult(JsonConvert.SerializeObject(loggedUser)) { StatusCode = StatusCodes.Status200OK };
+            return new JsonResult(loggedUser) { StatusCode = StatusCodes.Status200OK };
         }
 
-        [HttpGet("/logout")]
-        [Authorize(AccessLevels.Standard)]
-        public IActionResult Logout(HttpContext context)
+        [HttpGet("/api/logout")]
+        [Authorize(AccessLevel.Standard)]
+        public IActionResult Logout()
         {
-            if(!_authService.TryLogout(context, out string login))
+            if(!_authService.TryLogout(HttpContext, out string login))
                 return new JsonResult(UserMessages.LogoutFailed) { StatusCode = StatusCodes.Status400BadRequest};
 
             return new JsonResult(UserMessages.LogoutSuccessful + login) { StatusCode = StatusCodes.Status202Accepted };

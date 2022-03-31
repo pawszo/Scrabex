@@ -14,7 +14,7 @@ namespace Scrabex.WebApi.Services
             _service = MD5.Create();
         }
 
-        public string GetHash(string key) => _service.ComputeHash(SaltedBytes(key)).ToString();
+        public string GetHash(string key) => _config.GlobalEncoding.GetString(_service.ComputeHash(SaltedBytes(key)));
 
         private byte[] SaltedBytes(string phrase) => _config.GlobalEncoding.GetBytes($"{phrase}{_config.Salt}");
      }

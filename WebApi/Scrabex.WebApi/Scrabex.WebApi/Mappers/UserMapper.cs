@@ -1,4 +1,5 @@
-﻿using Scrabex.WebApi.Dtos;
+﻿using Scrabex.WebApi.Adapters;
+using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Dtos.User;
 using Scrabex.WebApi.Enums;
 using Scrabex.WebApi.Models;
@@ -7,6 +8,13 @@ namespace Scrabex.WebApi.Mappers
 {
     public class UserMapper : IMapper<User, CreateUserDto, UserDto, UpdateUserDto>
     {
+        private readonly IConfigAdapter _config;
+
+        public UserMapper(IConfigAdapter config)
+        {
+            _config = config;
+        }
+
         public UserDto MapToDto(User model) => new UserDto
         {
             Id = model.Id,
@@ -22,7 +30,7 @@ namespace Scrabex.WebApi.Mappers
             {
                 UserTitle = dto.UserTitle,
                 CountryCode = dto.CountryCode,
-                AccessLevel = (int)AccessLevels.Unconfirmed,
+                AccessLevel = (int)_config.DefaultAccessLevelOnRegister,
                 CreatedAt = DateTime.Now
             };
 

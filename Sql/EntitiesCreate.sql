@@ -19,6 +19,7 @@ create table UserDetails (
 	foreign key (UserId) references Users(Id),
 	Login VARCHAR(128) not null,
 	Password VARCHAR(32) not null,
+	Email VARCHAR(64) not null,
 	ForgotPassword bit not null,
 	LastUpdate DateTime not null
 );
@@ -38,9 +39,10 @@ create table ScenarioSteps (
 	FOREIGN KEY (Id) references [dbo].Scenarios(Id)
 );
 create table ScenarioComponents (
-	ComponentId int identity(1,1) primary key,
+	Id int identity(1,1) primary key,
 	Name VARCHAR(128) not null,
 	Query VARCHAR(2048) not null,
 	ScenarioId int not null
-	FOREIGN KEY (ScenarioId) references [dbo].Scenarios(Id)	
+	FOREIGN KEY (ScenarioId) references [dbo].Scenarios(Id),
+	Symbol VARCHAR(32) not null
 );

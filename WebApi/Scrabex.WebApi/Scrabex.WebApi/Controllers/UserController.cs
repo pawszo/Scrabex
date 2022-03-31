@@ -29,57 +29,59 @@ namespace Scrabex.WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(AccessLevels.Elevated)]
-        public IActionResult GetUsers() => new JsonResult(new JArray(_service.GetAll().Select(p => JsonConvert.SerializeObject(p)).ToArray())) { StatusCode = 200 };
+        [Authorize(AccessLevel.Elevated)]
+        public IActionResult GetUsers() => new JsonResult(_service.GetAll()) { StatusCode = 200 };
 
-        
-        [HttpGet("{id}")]
-        [Authorize(AccessLevels.Standard, true)]
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize(AccessLevel.Standard, true)]
         public IActionResult GetUser(int id)
         {
             if (!_service.TryGet(id, out var foundUser))
-                return new JsonResult(new JObject(UserMessages.ObjectNotFound)) { StatusCode = StatusCodes.Status404NotFound };
+                return new JsonResult(UserMessages.ObjectNotFound) { StatusCode = StatusCodes.Status404NotFound };
 
             if(foundUser.Id != id)
-                return new JsonResult(new JObject(UserMessages.UnauthorizedRestricted)) { StatusCode = StatusCodes.Status401Unauthorized };
+                return new JsonResult(UserMessages.UnauthorizedRestricted) { StatusCode = StatusCodes.Status401Unauthorized };
 
-            return new JsonResult(JsonConvert.SerializeObject(foundUser)) { StatusCode = StatusCodes.Status200OK };
+            return new JsonResult(foundUser) { StatusCode = StatusCodes.Status200OK };
         }
 
         [HttpPost]
-        [Authorize(AccessLevels.AnonConsent)]
+        [Authorize(AccessLevel.AnonConsent)]
         public IActionResult AddUser([FromBody] CreateUserDto userDto)
         {
             if (!_service.TryAdd(userDto, out var newUser))
-                return new JsonResult(new JObject(UserMessages.ObjectCreateFailed)) { StatusCode = StatusCodes.Status404NotFound };
+                return new JsonResult(UserMessages.ObjectCreateFailed) { StatusCode = StatusCodes.Status404NotFound };
 
-            return new JsonResult(JsonConvert.SerializeObject(newUser)) {  StatusCode= StatusCodes.Status202Accepted };
+            return new JsonResult(newUser) {  StatusCode= StatusCodes.Status202Accepted };
         }
 
-        [HttpPut("{id}")]
-        [Authorize(AccessLevels.Standard, true)]
+        [HttpPut]
+        [Route("{id}")]
+        [Authorize(AccessLevel.Standard, true)]
         public IActionResult PutUser(int id, [FromBody] UpdateUserDto userDto)
         {
             if (!_service.TryGet(id, out var foundUser))
-                return new JsonResult(new JObject(UserMessages.ObjectNotFound)) { StatusCode = StatusCodes.Status404NotFound };
+                return new JsonResult(UserMessages.ObjectNotFound) { StatusCode = StatusCodes.Status404NotFound };
 
             if (!_service.TryUpdate(id, userDto, out var newUser))
-                return new JsonResult(new JObject(UserMessages.ObjectUpdateFailed)) { StatusCode = StatusCodes.Status404NotFound };
+                return new JsonResult(UserMessages.ObjectUpdateFailed) { StatusCode = StatusCodes.Status404NotFound };
 
-            return new JsonResult(JsonConvert.SerializeObject(newUser)) { StatusCode = StatusCodes.Status202Accepted };
+            return new JsonResult(newUser) { StatusCode = StatusCodes.Status202Accepted };
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(AccessLevels.Elevated, true)]
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(AccessLevel.Elevated, true)]
         public IActionResult DeleteUser(int id)
         {
             if (!_service.TryGet(id, out var foundUser))
-                return new JsonResult(new JObject(UserMessages.ObjectNotFound)) { StatusCode = StatusCodes.Status404NotFound };
+                return new JsonResult(UserMessages.ObjectNotFound) { StatusCode = StatusCodes.Status404NotFound };
 
             if (!_service.TryDelete(id, out var deletedUser))
-                return new JsonResult(new JObject(UserMessages.ObjectDeleteFailed)) { StatusCode = StatusCodes.Status404NotFound };
+                return new JsonResult(UserMessages.ObjectDeleteFailed) { StatusCode = StatusCodes.Status404NotFound };
 
-            return new JsonResult(JsonConvert.SerializeObject(deletedUser)) { StatusCode = StatusCodes.Status202Accepted };
+            return new JsonResult(deletedUser) { StatusCode = StatusCodes.Status202Accepted };
         }
     }
 }

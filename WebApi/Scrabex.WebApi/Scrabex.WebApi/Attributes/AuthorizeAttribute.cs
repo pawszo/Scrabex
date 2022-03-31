@@ -9,10 +9,10 @@ namespace Scrabex.WebApi.Attributes
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        public AccessLevels RequiredPermission { get; set; }
+        public AccessLevel RequiredPermission { get; set; }
         public bool SelfOnly { get; set; }
 
-        public AuthorizeAttribute(AccessLevels requiredPermission, bool selfOnly = false)
+        public AuthorizeAttribute(AccessLevel requiredPermission, bool selfOnly = false)
         {
             RequiredPermission = requiredPermission;
             SelfOnly = selfOnly;
@@ -25,11 +25,11 @@ namespace Scrabex.WebApi.Attributes
                 context.HttpContext.Items[ContextProperties.AccessLevel] = user.AccessLevel;
             }
 
-            if (!Enum.TryParse<AccessLevels>(context.HttpContext.Items[ContextProperties.AccessLevel].ToString(), out var currentAccess))
+            if (!Enum.TryParse<AccessLevel>(context.HttpContext.Items[ContextProperties.AccessLevel]?.ToString() ?? "", out var currentAccess))
             {
-                if (RequiredPermission == AccessLevels.Anon)
+                if (RequiredPermission == AccessLevel.Anon)
                 {
-                    context.HttpContext.Items[ContextProperties.AccessLevel] = AccessLevels.Anon;
+                    context.HttpContext.Items[ContextProperties.AccessLevel] = AccessLevel.Anon;
                     return;
                 }
 
@@ -39,13 +39,13 @@ namespace Scrabex.WebApi.Attributes
 
             if(currentAccess < RequiredPermission)
             {
-                if(currentAccess < AccessLevels.Unconfirmed)
+                if(currentAccess < AccessLevel.Unconfirmed)
                 {
                     context.Result = new JsonResult(new { message = UserMessages.UnauthorizedAnon }) { StatusCode = StatusCodes.Status401Unauthorized };
                     return;
                 }    
 
-                if(currentAccess == AccessLevels.Unconfirmed)
+                if(currentAccess == AccessLevel.Unconfirmed)
                 {
                     context.Result = new JsonResult(new { message = UserMessages.UnauthorizedNotConfirmed }) { StatusCode = StatusCodes.Status401Unauthorized };
                     return;
