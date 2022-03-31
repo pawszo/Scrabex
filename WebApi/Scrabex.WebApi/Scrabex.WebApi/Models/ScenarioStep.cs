@@ -12,7 +12,6 @@ namespace Scrabex.WebApi.Models
         public override int Id { get; set; }
         public int Order { get; set; }
         public string Action { get; set; }
-        public int AuthorId { get; set; }
         public int ScenarioId { get; set; }
     }
 }

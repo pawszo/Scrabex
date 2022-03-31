@@ -11,7 +11,8 @@ using Scrabex.WebApi.Services;
 using Scrabex.WebApi.Dtos.User;
 using Scrabex.WebApi.Dtos.Scenario;
 using Microsoft.AspNetCore.Authentication;
-using Scrabex.WebApi.Handlers;
+using Scrabex.WebApi.Adapters;
+using Scrabex.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,24 @@ builder.Services.AddSwaggerGen();
 #region EF
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
 builder.Configuration.AddJsonFile("appsettings.json");
-var connectionString = builder.Configuration.GetConnectionString("devConnection");
+var connectionString = builder.Configuration.GetConnectionString("Dev");
+#endregion
+
+#region Security
+//builder
+//    .Services
+//    .AddCors(
+//    c => c.AddPolicy("AllowOrigin",
+//    options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+//builder
+//    .Services
+//    .AddAuthentication("BasicAuthentication")
+//    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+//builder.Services.AddAuthorization();
+
+builder.Services.AddCors();
 #endregion
 
 #region Bindings
@@ -36,7 +54,8 @@ builder.Services.AddDbContext<ScenarioContext>(options => options.UseSqlServer(c
 // services
 builder.Services.AddScoped<IObjectService<User, CreateUserDto, UserDto, UpdateUserDto>, UserService>();
 builder.Services.AddScoped<IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto>, ScenarioService>();
-builder.Services.AddScoped<IAuthService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IHashService, MD5Service>();
 
 // mappers
 builder.Services.AddScoped<IMapper<User, CreateUserDto, UserDto, UpdateUserDto>, UserMapper>();
@@ -48,14 +67,11 @@ builder.Services.AddScoped<IMapper<ScenarioStep, CreateScenarioStepDto, Scenario
 // facades
 builder.Services.AddScoped<IObjectServiceFacade, ObjectServiceFacade>();
 
+// adapters
+builder.Services.AddSingleton<IConfigAdapter, AppSettingsAdapter>();
 #endregion
 
-#region Security
-builder
-    .Services
-    .AddCors(
-    c => c.AddPolicy("AllowOrigin",
-    options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -65,14 +81,6 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
-builder
-    .Services
-    .AddAuthentication("BasicAuthentication")
-    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
-builder.Services.AddAuthorization();
-#endregion
 
 #region Serialization
 builder
@@ -106,13 +114,21 @@ if (app.Environment.IsDevelopment())
 }
 #endregion
 
+// global cors policy
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
 
 app.UseHttpsRedirection();
-app.UseSession();
+//app.UseSession();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
+app.UseMiddleware<JwtMiddleware>();
 
 app.MapControllers();
 
+//app.Run($"http://localhost:{app.Configuration["http_port"]}");
 app.Run();

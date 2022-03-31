@@ -12,6 +12,5 @@ namespace Scrabex.WebApi.Dtos
         public int ScenarioId { get; set; }
         public int Order { get; set; }
         public string Action { get; set; }
-        public int AuthorId { get; set; }
     }
 }

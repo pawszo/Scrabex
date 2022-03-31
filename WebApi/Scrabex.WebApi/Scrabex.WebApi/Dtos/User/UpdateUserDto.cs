@@ -9,7 +9,6 @@ namespace Scrabex.WebApi.Dtos.User
     {
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
-        public bool Confirmed { get; set; }
         public new UpdateUserDetailDto Details { get; set; }
 
     }

@@ -1,15 +1,23 @@
 ﻿using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Models;
+using Scrabex.WebApi.Services;
 
 namespace Scrabex.WebApi.Mappers
 {
     public class UserDetailMapper : IMapper<UserDetail, CreateUserDetailDto, UserDetailDto, UpdateUserDetailDto>
     {
+        private readonly IHashService _hashService;
+
+        public UserDetailMapper(IHashService hashService)
+        {
+            _hashService = hashService;
+        }
+
         public UserDetail CreateModel(CreateUserDetailDto dto) => new UserDetail
         {
             LastUpdate = DateTime.Now,
             Login = dto.Login,
-            Password = dto.Password,
+            Password = _hashService.GetHash(dto.Password),
             UserId = dto.UserId
         };
 
@@ -32,7 +40,7 @@ namespace Scrabex.WebApi.Mappers
         public void UpdateModel(UserDetail model, UpdateUserDetailDto updateDto)
         {
             model.LastUpdate = DateTime.Now;
-            model.Password = updateDto.Password;
+            model.Password = _hashService.GetHash(updateDto.Password);
         }
     }
 }

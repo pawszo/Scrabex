@@ -9,6 +9,5 @@ namespace Scrabex.WebApi.Dtos
     {
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
-        public int AuthorId { get; set; }
     }
 }

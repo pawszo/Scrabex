@@ -8,7 +8,6 @@ namespace Scrabex.WebApi.Mappers
         public ScenarioStepDto MapToDto(ScenarioStep model) => new ScenarioStepDto
         {
             Action = model.Action,
-            AuthorId = model.AuthorId,
             Order = model.Order,
             Id = model.Id,
             ScenarioId = model.ScenarioId
@@ -23,7 +22,6 @@ namespace Scrabex.WebApi.Mappers
         public void UpdateModel(ScenarioStep model, UpdateScenarioStepDto updateDto)
         {
             model.Action = updateDto.Action;
-            model.AuthorId = updateDto.AuthorId;
             model.Order = updateDto.Order;
         }
     }

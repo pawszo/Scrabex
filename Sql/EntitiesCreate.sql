@@ -1,18 +1,26 @@
-begin tran
-/*
 drop table ScenarioComponents;
-drop table UserDetails;
-drop table Users;
 drop table ScenarioSteps;
 drop table Scenarios;
-*/
+drop table UserDetails;
+drop table Users;
+
+
 
 create table Users (
 	Id int identity(1,1) primary key,
 	UserTitle VARCHAR(128) not null,
 	CreatedAt DateTime not null,
 	CountryCode VARCHAR(3) not null,
-	Confirmed BIT not null
+	AccessLevel int not null
+);
+create table UserDetails (
+	Id int identity(1,1) primary key,
+	UserId int not null
+	foreign key (UserId) references Users(Id),
+	Login VARCHAR(128) not null,
+	Password VARCHAR(32) not null,
+	ForgotPassword bit not null,
+	LastUpdate DateTime not null
 );
 
 create table Scenarios (
@@ -22,7 +30,6 @@ create table Scenarios (
 	AuthorId int not null
 	FOREIGN KEY (AuthorId) references [dbo].Users(Id)
 );
-
 create table ScenarioSteps (
 	Id int identity(1,1) primary key,
 	[Order] int not null,
@@ -30,17 +37,6 @@ create table ScenarioSteps (
 	ScenarioId int not null
 	FOREIGN KEY (Id) references [dbo].Scenarios(Id)
 );
-
-create table UserDetails (
-	Id int identity(1,1) primary key,
-	UserId int not null
-	foreign key (UserId) references Users(Id),
-	Login VARCHAR(128) not null,
-	Password VARCHAR(128) not null,
-	ForgotPassword bit not null,
-	LastUpdate DateTime not null
-	);
-
 create table ScenarioComponents (
 	ComponentId int identity(1,1) primary key,
 	Name VARCHAR(128) not null,
@@ -48,5 +44,3 @@ create table ScenarioComponents (
 	ScenarioId int not null
 	FOREIGN KEY (ScenarioId) references [dbo].Scenarios(Id)	
 );
-
-commit tran

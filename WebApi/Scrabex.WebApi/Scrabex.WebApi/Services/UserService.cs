@@ -2,15 +2,12 @@
 using Scrabex.WebApi.Contexts;
 using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Dtos.User;
-using Scrabex.WebApi.Enums;
 using Scrabex.WebApi.Mappers;
 using Scrabex.WebApi.Models;
-using System.Security.Claims;
-using System.Text;
 
 namespace Scrabex.WebApi.Services
 {
-    public class UserService : IObjectService<User, CreateUserDto, UserDto, UpdateUserDto>, IAuthService
+    public class UserService : IObjectService<User, CreateUserDto, UserDto, UpdateUserDto>
     {
         private readonly IMapper<User, CreateUserDto, UserDto, UpdateUserDto> _userMapper;
         private readonly IMapper<UserDetail, CreateUserDetailDto, UserDetailDto, UpdateUserDetailDto> _userDetailMapper;
@@ -101,51 +98,6 @@ namespace Scrabex.WebApi.Services
             throw new NotImplementedException();
         }
 
-        public bool TryLogin(HttpContext httpContext, LoginDto dto, out UserDto loggedUser)
-        {
-            loggedUser = null;
-
-            if (string.IsNullOrWhiteSpace(dto.Login) || string.IsNullOrWhiteSpace(dto.Password))
-                return false;
-
-            var foundUserDetail = _userContext.UserDetails.FirstOrDefault(p => p.Login == dto.Login && p.Password == dto.Password);
-
-            if (foundUserDetail == null)
-                return false;
-
-
-            var userFound = TryGet(foundUserDetail.UserId, out loggedUser);
-
-            if (!userFound)
-                return false;
-            
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, loggedUser.Details.Login),
-                new Claim(ClaimTypes.Country, loggedUser.CountryCode),
-                new Claim(ClaimTypes.SerialNumber, loggedUser.Id.ToString()),
-                new Claim(ClaimTypes.Role, loggedUser.Confirmed ? Roles.Confirmed.ToString() : Roles.Unconfirmed.ToString())
-            };
-            ClaimsIdentity identity = new ClaimsIdentity(claims);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            
-            httpContext.User = principal;
-            //httpContext.Session.Set("user", GetUserSessionKey(loggedUser));
-            httpContext.Session.Set("user", Encoding.UTF8.GetBytes(loggedUser.Id.ToString()));
-
-            return true;
-        }
-
-        public bool ForgotPassword(LoginDto dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryRegister(CreateUserDto dto, out UserDto registeredUser)
-        {
-            return TryAdd(dto, out registeredUser);
-        }
-
         private bool TryDeleteDetail(int userId, out UserDetailDto removedDetail)
         {
             removedDetail = new UserDetailDto();
@@ -163,7 +115,5 @@ namespace Scrabex.WebApi.Services
             removedDetail = _userDetailMapper.MapToDto(removedEntity.Entity);
             return true;
         }
-
-        private byte[] GetUserSessionKey(UserDto loggedUser) => Encoding.UTF8.GetBytes((loggedUser.Details.Login + loggedUser.Details.Password).GetHashCode().ToString());
     }
 }

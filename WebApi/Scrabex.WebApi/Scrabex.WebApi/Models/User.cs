@@ -13,6 +13,6 @@ namespace Scrabex.WebApi.Models
         public string UserTitle { get; set; }        
         public DateTime CreatedAt { get; set; }
         public string CountryCode { get; set; }
-        public bool Confirmed { get; set; }
+        public int AccessLevel { get; set; }
     }
 }

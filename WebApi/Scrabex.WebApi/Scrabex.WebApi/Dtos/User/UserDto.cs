@@ -16,7 +16,7 @@ namespace Scrabex.WebApi.Dtos
         public string CountryCode { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]
-        public bool Confirmed { get; set; }
+        public int AccessLevel { get; set; }
         public UserDetailDto Details { get; set; }
     }
 }

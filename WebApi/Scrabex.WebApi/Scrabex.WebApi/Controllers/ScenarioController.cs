@@ -1,18 +1,12 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Scrabex.WebApi.Contexts;
+using Scrabex.WebApi.Attributes;
+using Scrabex.WebApi.Constants;
 using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Dtos.Scenario;
-using Scrabex.WebApi.Mappers;
+using Scrabex.WebApi.Enums;
 using Scrabex.WebApi.Models;
 using Scrabex.WebApi.Services;
 
@@ -21,7 +15,6 @@ namespace Scrabex.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    [Authorize]
     public class ScenarioController : ControllerBase
     {
         private readonly IObjectService<Scenario, CreateScenarioDto, ScenarioDto, UpdateScenarioDto> _service;
@@ -34,55 +27,107 @@ namespace Scrabex.WebApi.Controllers
 
         // GET: api/Scenario
         [HttpGet]
+        [Authorize(AccessLevels.Elevated)]
         public IActionResult GetScenarios()
         {
             var scenarios = _service.GetAll();
-            return new JsonResult(JsonConvert.SerializeObject(scenarios.ToArray()));
+            return new JsonResult(JsonConvert.SerializeObject(scenarios.ToArray())) { StatusCode = StatusCodes.Status200OK };
+        }
+
+        [HttpGet]
+        [Route("/user/{userId}")]
+        [Authorize(AccessLevels.Standard,true)]
+        public IActionResult GetUserScenarios(int userId)
+        {
+            var scenarios = _service.GetAll().Where(p => p.AuthorId == userId);
+            return new JsonResult(JsonConvert.SerializeObject(scenarios.ToArray())) { StatusCode = StatusCodes.Status200OK };
         }
 
         // GET: api/Scenario/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize(AccessLevels.Elevated, true)]
         public IActionResult GetScenario(int id)
         {
             if(!_service.TryGet(id, out var foundObject))
             {
-                return new NotFoundResult();
+                return new JsonResult(new JObject(UserMessages.ObjectNotFound)) { StatusCode = StatusCodes.Status404NotFound };
             }
 
-            return new JsonResult(JsonConvert.SerializeObject(foundObject));
+            return new JsonResult(JsonConvert.SerializeObject(foundObject)) { StatusCode = StatusCodes.Status200OK };
         }
 
-        // PUT: api/Scenario/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpGet]
+        [Route("{id}/user/{userId}")]
+        [Authorize(AccessLevels.Standard, true)]
+        public IActionResult GetUserScenario(int id, int userId)
+        {
+            if (!_service.TryGet(id, out var foundObject))
+            {
+                return new JsonResult(new JObject(UserMessages.ObjectNotFound)) { StatusCode = StatusCodes.Status404NotFound };
+            }
+
+            if(foundObject.AuthorId != userId)
+                return new JsonResult(new JObject(UserMessages.UnauthorizedRestricted)) { StatusCode = StatusCodes.Status401Unauthorized };
+
+            return new JsonResult(JsonConvert.SerializeObject(foundObject)) { StatusCode = StatusCodes.Status200OK };
+        }
+
+
+        [HttpPut]
+        [Route("{id}")]
+        [Authorize(AccessLevels.Super)]
         public IActionResult PutScenario(int id, [FromBody] UpdateScenarioDto dto)
         {
             if (!_service.TryUpdate(id, dto, out var updatedScenario))
-                return new UnprocessableEntityResult();
+                return new JsonResult(new JObject(UserMessages.ObjectUpdateFailed)) { StatusCode = StatusCodes.Status404NotFound };
 
-            return new JsonResult(JsonConvert.SerializeObject(updatedScenario));
+            return new JsonResult(JsonConvert.SerializeObject(updatedScenario)) { StatusCode = StatusCodes.Status202Accepted };
+        }
+
+        [HttpPut]
+        [Route("{id}/user/{userId}")]
+        [Authorize(AccessLevels.Standard, true)]
+        public IActionResult PutUserScenario(int id, int userId, [FromBody] UpdateScenarioDto dto)
+        {
+            if(_service.TryGet(id, out var currentObject) && currentObject.AuthorId != userId)
+                return new JsonResult(new JObject(UserMessages.UnauthorizedRestricted)) { StatusCode = StatusCodes.Status401Unauthorized };
+
+            if (_service.TryUpdate(id, dto, out var updatedScenario))
+                return new JsonResult(JsonConvert.SerializeObject(updatedScenario)) { StatusCode = StatusCodes.Status202Accepted };
+                
+            return new JsonResult(new JObject(UserMessages.ObjectUpdateFailed)) { StatusCode = StatusCodes.Status404NotFound };
+
+
         }
 
         // POST: api/Scenario
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(AccessLevels.Standard)]
         public IActionResult PostScenario([FromBody] CreateScenarioDto scenarioDto)
         {
+            scenarioDto.AuthorId = (HttpContext.Items[ContextProperties.User] as IEntity).Id;
+
             if (!_service.TryAdd(scenarioDto, out var newScenario))
-                return new UnprocessableEntityResult();
+                return new JsonResult(new JObject(UserMessages.ObjectCreateFailed)) { StatusCode = StatusCodes.Status404NotFound };
 
-            return new JsonResult(JsonConvert.SerializeObject(newScenario));
+            return new JsonResult(JsonConvert.SerializeObject(newScenario)) { StatusCode = StatusCodes.Status202Accepted };
         }
 
-        // DELETE: api/Scenario/5
-        [HttpDelete("{id}")]
-        public IActionResult DeleteScenario(int id)
+        [HttpDelete]
+        [Route("{id}/user/{userId}")]
+        [Authorize(AccessLevels.Elevated, true)]
+        public IActionResult DeleteScenario(int id, int userId)
         {
-            if(!_service.TryDelete(id, out var removedObject))
-                return new NotFoundResult();
+            if(_service.TryGet(id, out var foundObject) && foundObject.AuthorId != userId)
+                return new JsonResult(new JObject(UserMessages.UnauthorizedRestricted)) { StatusCode = StatusCodes.Status401Unauthorized };
 
-            return new JsonResult(JsonConvert.SerializeObject(removedObject));
+
+            if (_service.TryDelete(id, out var removedObject))
+                return new JsonResult(JsonConvert.SerializeObject(removedObject)) { StatusCode = StatusCodes.Status202Accepted };
+
+            return new JsonResult(new JObject(UserMessages.ObjectDeleteFailed)) { StatusCode = StatusCodes.Status404NotFound };
         }
-
     }
 }

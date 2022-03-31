@@ -25,7 +25,6 @@ namespace Scrabex.WebApi.Mappers
         public ScenarioStepDto MapToDto(ScenarioStep model) => new ScenarioStepDto
         {
             Action = model.Action,
-            AuthorId = model.AuthorId,
             Order = model.Order,
             Id = model.Id,
             ScenarioId =model.ScenarioId

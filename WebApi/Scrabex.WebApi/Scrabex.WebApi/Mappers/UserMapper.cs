@@ -1,5 +1,6 @@
 ﻿using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Dtos.User;
+using Scrabex.WebApi.Enums;
 using Scrabex.WebApi.Models;
 
 namespace Scrabex.WebApi.Mappers
@@ -10,7 +11,7 @@ namespace Scrabex.WebApi.Mappers
         {
             Id = model.Id,
             UserTitle = model.UserTitle,
-            Confirmed = model.Confirmed,
+            AccessLevel = model.AccessLevel,
             CreatedAt = model.CreatedAt,
             CountryCode = model.CountryCode
         };
@@ -21,7 +22,7 @@ namespace Scrabex.WebApi.Mappers
             {
                 UserTitle = dto.UserTitle,
                 CountryCode = dto.CountryCode,
-                Confirmed = false,
+                AccessLevel = (int)AccessLevels.Unconfirmed,
                 CreatedAt = DateTime.Now
             };
 
