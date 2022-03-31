@@ -1,7 +1,6 @@
 ﻿using Scrabex.WebApi.Adapters;
 using Scrabex.WebApi.Dtos;
 using Scrabex.WebApi.Dtos.User;
-using Scrabex.WebApi.Enums;
 using Scrabex.WebApi.Models;
 
 namespace Scrabex.WebApi.Mappers
@@ -15,7 +14,7 @@ namespace Scrabex.WebApi.Mappers
             _config = config;
         }
 
-        public UserDto MapToDto(User model) => new UserDto
+        public UserDto MapToDto(User model) => new()
         {
             Id = model.Id,
             UserTitle = model.UserTitle,
