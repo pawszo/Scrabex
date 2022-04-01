@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import ToolBox from './ToolBox';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ToolBox id={1} login={"admin"} />
   </React.StrictMode>,
   document.getElementById('root')
 );
