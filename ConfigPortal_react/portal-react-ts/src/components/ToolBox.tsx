@@ -1,7 +1,6 @@
 import React from 'react';
-import "./Toggle";
+import "../functions/Toggle";
 import { Navbar, Nav, NavItem, NavProps, Button } from 'react-bootstrap';
-import useToggle from './Toggle';
 
 interface ToolBoxProps {
     id: number,

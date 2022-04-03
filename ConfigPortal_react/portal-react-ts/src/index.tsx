@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import ToolBox from './ToolBox';
+import ToolBox from './components/ToolBox';
+import WorkSpace from './components/WorkSpace';
 
 
 ReactDOM.render(
   <React.StrictMode>
     <ToolBox id={1} login={"admin"} />
+    <WorkSpace accessLevel={1} content={'register'}/>
   </React.StrictMode>,
   document.getElementById('root')
 );
