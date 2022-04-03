@@ -18,3 +18,7 @@
 /Scrapex.API/obj
 /Scrapex.API/bin/Debug/net6.0
 /obj/Debug
+/WebApi/Scrabex.WebApi/.vs/Scrabex.WebApi/DesignTimeBuild
+/WebApi/Scrabex.WebApi/.vs/Scrabex.WebApi/v17
+/WebApi/Scrabex.WebApi/Scrabex.WebApi/bin/Debug/net6.0
+/WebApi/Scrabex.WebApi/Scrabex.WebApi/obj
