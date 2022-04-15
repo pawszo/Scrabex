@@ -1,127 +1,128 @@
 import * as React from 'react';
-import { Form, Stack, Button } from 'react-bootstrap'
+import { Form, Stack, Button, Tooltip } from 'react-bootstrap'
+import LegalViewer from './LegalViewer';
+import UserService from '../functions/UserService'
 
 interface RegisterFormProps {
     
 }
  
 interface RegisterFormState {
-    isConsent : boolean
+    isConsent : boolean,
+    isEmailValid : boolean,
+    isLoginValid : boolean
 }
  
-class RegisterForm extends React.Component<{},RegisterFormState> {
-    state: RegisterFormState = {
-        isConsent: false
+const RegisterForm = () => {
+  const [login, setLogin] = React.useState("");
+  const [isConsent, setConsent] = React.useState("");
+
     };
+
     handleConsentChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         this.setState((state, props) => {
             return {isConsent: e.target.checked};
         });
     };
+
+    const submitForm = (data : FieldValues) => {
+      let dto : LoginDto = {login: data.login, forgotPassword: data.forgotPassword, password: data.password};
+      UserService.SignIn(dto);
+    }
+
     render() { 
         return (
-            <div id="register-form" className="d-flex align-middle justify-content-center">
-               <form>
-                 <Stack gap={0} direction="horizontal" className="mx-auto">
-                     <br/><br/>
-                   <h1 className="d-flex justify-content-center">Sign up</h1>
-                   <hr />
-                   <br />
-                   <input
-                     type="text"
-                     className="form-control d-flex"
-                     id="register-username"
-                     placeholder="Login"
-                     required
-                   />
-                   <br />
-                   <input
-                     type="password"
-                     className="form-control d-flex"
-                     id="register-password"
-                     placeholder="Password"
-                   />
-                   <br />
-                   <div className="form-check ml-2">
-                     <input
-                       className="form-check-input"
-                       type="checkbox"
-                       id="login-forgot-password"
-                       onChange={this.handleConsentChange}
-                       
-                     />
-                     <label
-                       className="form-check-label ml-4"
-                       htmlFor="login-forgot-password"
-                     >
-                       I give my consent to the terms of use.
-                     </label>
-                   </div><br/><br/>
-                   <div className='d-grid'>
-                   <Button className='btn btn-primary col-md-12'>
-                        Submit
-                   </Button>
-                   <hr/>
-                   <Button className='btn btn-secondary col-md-12'>
-                        Sign up for free
-                   </Button>
-                   </div>
-                 </Stack>
-               </form>
-             </div>
-             /*
-          <div id='register-form'>
-            <form>
-              <div className="form-group">
-                <label htmlFor="register-email-textbox">Email address</label>
+          <div
+            id="register-form"
+            className="d-flex justify-content-center mt-3"
+          >
+            <LegalViewer consentGiven={this.state.isConsent}/>
+            <form className="border rounded border-primary">
+              <Stack gap={0} direction="horizontal" className="m-5">
+                <h1 className="d-flex justify-content-center">Sign up</h1>
+                <hr />
                 <input
                   type="email"
                   className="form-control"
-                  id="register-email-textbox"
-                  placeholder="Must be a valid email address. e.g. 'name@example.com'"
-                  required={true}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="register-login-textbox">Login</label>
+                  id="register-email"
+                  placeholder="Email" 
+                  data-toggle='tooltip'
+                  title="Must be a valid email address. e.g. 'name@example.com'"
+                  required
+                /><br/>
                 <input
                   type="text"
                   className="form-control"
-                  id="register-login-textbox"
-                  placeholder="5 or more characters. Must be unique. e.g. 'JohnDoe12'"
-                  required={true}
+                  id="register-login"
+                  data-toggle="tooltip"
+                  title="5 or more characters. Must be unique. e.g. 'JohnDoe12'"
+                  minLength={5}
+                  placeholder='Login'
+                  required
                 />
-              </div>
-              <div className="form-group">
-                <label htmlFor="register-password-textbox">Password</label>
+                <br />
                 <input
                   type="password"
                   className="form-control"
-                  id="register-password-textbox"
-                  placeholder="10 or more characters. Must contain letters, digits and special characters."
-                  required={true}
+                  id="register-password"
+                  placeholder="Password"
+                  data-toggle="tooltip"
+                  minLength={10}
+                  title="10 or more characters. Must contain letters, digits and special characters."
+                  required
                 />
-              </div>
-              <div className="form-group">
-                <label htmlFor="register-country-textbox">Country</label>
+                <br />
                 <input
                   type="text"
                   className="form-control"
-                  id="register-country-textbox"
-                  placeholder="Your country code. e.g. 'US' or 'DE'"
+                  id="register-country"
+                  placeholder="Your country code"
+                  title="Examples: UK, BG, PL, CZ, SK, CH, CA, CN"
                   maxLength={3}
-                  required={true}
+                  required
                 />
-              </div>
-              <div className="form-group">
-                <label htmlFor="register-consent-checkbox">Terms of use</label>
-                <input 
-                type="checkbox" 
-                id='register-consent-checkbox'/>
-              </div>
-              <button type="submit" className="btn btn-primary">Register</button>
+                <br />
+                <input
+                  type="text"
+                  className="form-control d-flex"
+                  id="register-title"
+                  placeholder="Title"
+                  title="Name, Fullname or company"
+                  required
+                /><br/>
+                <div className="form-check ml-2">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="register-consent"
+                    onChange={this.handleConsentChange}
+                    checked={this.state.isConsent}
+                  />
+                  <p
+                    className="form-check-label ml-1"
+                  >
+                    I give my consent to the <a 
+                    itemType='button' 
+                    className='text-info'
+                    data-toggle="modal"
+                    data-target='#consent-modal'
+                    onClick={() => {
+                        setTimeout(
+                            () => document.getElementsByClassName('modal-backdrop')[0]?.addEventListener("click", e => (e.target as HTMLDivElement).remove()),
+                            2000);
+                        }
+                        }>terms of
+                    service</a>
+                  </p>
+                </div>
+                  <Button type='submit' className="btn btn-primary col-md-12 mt-5">Submit</Button>
+                  <hr />
+                  <Button className="btn btn-secondary col-md-12">
+                    Sign in
+                  </Button>
+              </Stack>
             </form>
-          </div> */
+          </div>
         );
     }
 }

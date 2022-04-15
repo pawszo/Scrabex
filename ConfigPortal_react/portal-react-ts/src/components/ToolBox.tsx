@@ -1,22 +1,13 @@
 import React from 'react';
-import "../functions/Toggle";
 import { Navbar, Nav, NavItem, NavProps, Button } from 'react-bootstrap';
+import { RootState } from '../state/AppStore';
 
-interface ToolBoxProps {
-    id: number,
-    login: string
-}
  
 interface ToolBoxState {
     expanded: boolean
 }
  
-class ToolBox extends React.Component<ToolBoxProps, ToolBoxState> {
-    constructor(props: ToolBoxProps)
-    {
-        super(props);
-    };
-
+class ToolBox extends React.Component<{}, ToolBoxState> {
     state : ToolBoxState = {
         expanded: false
     };

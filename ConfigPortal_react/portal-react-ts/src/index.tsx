@@ -8,8 +8,8 @@ import WorkSpace from './components/WorkSpace';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ToolBox id={1} login={"admin"} />
-    <WorkSpace accessLevel={1} content={'register'}/>
+    <ToolBox />
+    <WorkSpace />
   </React.StrictMode>,
   document.getElementById('root')
 );
