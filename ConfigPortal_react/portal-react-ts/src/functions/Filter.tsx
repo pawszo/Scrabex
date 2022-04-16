@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { useStore } from './Store';
+import { useStore } from './Context';
 
 export function Filter() {
     const store = useStore();

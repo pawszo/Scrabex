@@ -17,3 +17,4 @@ export interface IAction extends AnyAction { type: string };
 export interface IConsumerAction<T> extends IAction { payload: T };
 
 export interface IErrorAction extends IAction {error: string};
+

@@ -1,7 +1,7 @@
 import redux from 'react-redux';
 import React, { createContext, useReducer } from "react";
 import { useDispatch } from 'react-redux'
-import { userReducer } from './Reducers';
+import { userReducer } from '../reducers/UserReducer';
 import { IContext, initState } from '../types/StateTypes';
 
 const createStore = redux.createStoreHook;
